@@ -1,47 +1,112 @@
-♟️ Chess Master Pro
+♟️ Chess Master Pro – Web Chess Game
 
-A simple, modern web-based Chess game built using HTML, CSS, and JavaScript. Play against another player or challenge the computer with adjustable difficulty — classic chess, clean interface.
+🎮 Chess Master Pro is a modern, feature-rich web-based Chess game built using HTML, CSS, and Vanilla JavaScript. It delivers a clean, professional UI with classic chess fundamentals, smart interactions, and multiple play modes — staying true to how chess has always been played, while enhancing it for the web.
 
-🎯 Features
+Designed for both casual players and serious learners, the game supports Player vs Player and Player vs Computer modes with adjustable difficulty.
 
-Player vs Player (hotseat)
+🧠 Features
 
-Player vs Computer (Easy / Medium / Hard)
+Two game modes:
 
-Legal move validation
+Player vs Player (Hotseat)
 
-Check & Checkmate detection
+Player vs Computer (AI)
 
-Undo move and hint support
+Adjustable AI difficulty: Easy, Medium, Hard
 
-Move history and captured pieces
+Fully interactive chessboard with legal move validation
 
-Board flip option
+Visual indicators for:
 
-Responsive design (mobile & desktop)
+Selected pieces
+
+Valid moves
+
+Last move
+
+Check and Checkmate
+
+Captured pieces display with material advantage tracking
+
+Move history panel with navigation
+
+Board flip option for better perspective
+
+Hint system to guide learning
+
+Undo move functionality
+
+Game timer and move counter
+
+Clean, responsive UI – optimized for desktop and mobile
+
+Accessibility-focused controls and keyboard-friendly design
 
 🛠️ Tech Stack
 
-HTML5
+HTML5 – Semantic structure and layout
 
-CSS3
+CSS3 – Responsive design, animations, and board styling
 
-Vanilla JavaScript
+Vanilla JavaScript – Game logic, AI handling, move validation, and UI control
 
-▶️ How to Play
+No frameworks. No libraries. Pure fundamentals.
 
-Open the game in a browser
+🧩 How to Play
 
-Select a game mode
+Open the game in any modern browser (no installation required).
 
-Click a piece to see valid moves
+Choose a game mode:
 
-Play until checkmate or draw
+Player vs Player
 
-♟️ Rules
+Player vs Computer
 
-Standard Chess rules apply.
+If playing against AI, select the desired difficulty level.
 
-♟️ Rules
+Click on a piece to see valid moves.
 
-Standard Chess rules apply.
+Make strategic moves while tracking:
+
+Captured pieces
+
+Material advantage
+
+Move history
+
+Use controls like Undo, Hint, Flip Board, or New Game as needed.
+
+Play until Checkmate, Stalemate, or draw conditions are met.
+
+♟️ Game Rules
+
+Classic Chess rules apply:
+
+Standard 8×8 board setup
+
+Legal movement for all pieces
+
+Check, Checkmate, and Stalemate detection
+
+Pawn promotion supported
+
+Turn-based gameplay with validation
+
+No gimmicks. Just proper chess.
+
+🚀 Live Demo
+
+👉 Play here:
+https://pathrabe2416.github.io/chess/
+
+🤝 Contribution
+
+Contributions are welcome.
+
+Fork the repository
+
+Improve UI, AI logic, or performance
+
+Submit a pull request
+
+Chess has evolved for centuries — thoughtful improvements are always valued.
