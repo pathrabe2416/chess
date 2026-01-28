@@ -1,4 +1,4 @@
-♟️ Chess Master Pro – Web Chess Game
+#♟️ Chess Master Pro – Web Chess Game
 
 🎮 Chess Master Pro is a modern, feature-rich web-based Chess game built using HTML, CSS, and Vanilla JavaScript. It delivers a clean, professional UI with classic chess fundamentals, smart interactions, and multiple play modes — staying true to how chess has always been played, while enhancing it for the web.
 
