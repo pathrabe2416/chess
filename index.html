@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Professional Chess Game - Play against AI or friends">
+    <title>Chess</title>
+    <link rel="stylesheet" href="index.css">
+
+</head>
+<body>
+    <div class="container">
+        <!-- Mode Selection Screen -->
+        <div id="modeScreen" class="mode-select">
+            <h1>♔ Chess Master Pro</h1>
+            <div class="mode-buttons">
+                <button class="mode-button" onclick="startGame('player')">
+                    <span>👥</span> Player vs Player
+                </button>
+                <button class="mode-button" onclick="showDifficultySelect()">
+                    <span>🤖</span> Player vs Computer
+                </button>
+            </div>
+            <div id="difficultySelector" class="difficulty-selector hidden">
+                <p style="margin-bottom: 10px; color: #666;">Select Difficulty:</p>
+                <div class="difficulty-buttons">
+                    <button class="btn-success active" onclick="selectDifficulty('easy')">Easy</button>
+                    <button onclick="selectDifficulty('medium')">Medium</button>
+                    <button class="btn-danger" onclick="selectDifficulty('hard')">Hard</button>
+                </div>
+                <button class="mode-button mt-20" onclick="startGameWithDifficulty()">Start Game</button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="gameScreen" class="hidden">
+            <div class="header">
+                <h1 id="gameTitle">♔ Chess</h1>
+                <div class="controls">
+                    <button id="undoBtn" onclick="undoMove()" title="Undo Move (U)" aria-label="Undo move">
+                        ↶ Undo
+                    </button>
+                    <button id="hintBtn" onclick="showHint()" title="Show Hint" aria-label="Show hint">
+                        💡 Hint
+                    </button>
+                    <button onclick="flipBoard()" title="Flip Board (F)" aria-label="Flip board">
+                        🔄 Flip
+                    </button>
+                    <button onclick="toggleSound()" id="soundBtn" title="Toggle Sound" aria-label="Toggle sound">
+                        🔊
+                    </button>
+                    <button onclick="showSettings()" title="Settings" aria-label="Open settings">
+                        ⚙️
+                    </button>
+                    <button class="btn-warning" onclick="confirmNewGame()" title="New Game (R)" aria-label="New game">
+                        🆕 New
+                    </button>
+                    <button class="btn-secondary" onclick="confirmBackToMenu()" title="Back to Menu" aria-label="Back to menu">
+                        🏠 Menu
+                    </button>
+                </div>
+            </div>
+
+            <div class="game-layout">
+                <div class="board-container">
+                    <!-- Captured by White -->
+                    <div class="captured-pieces">
+                        <div class="captured-header">
+                            <span>⚫ Captured by Black</span>
+                            <span id="materialBlack" class="material-advantage"></span>
+                        </div>
+                        <div id="capturedByBlack" class="captured-list"></div>
+                    </div>
+
+                    <!-- Loading Message -->
+                    <div id="loadingMessage" class="loading-message hidden">
+                        <div class="spinner"></div>
+                        <span>Computer is thinking...</span>
+                    </div>
+
+                    <!-- Chess Board with Coordinates -->
+                    <div class="board-wrapper" id="boardWrapper">
+                        <div class="chessboard-with-coords">
+                            <div class="rank-labels">
+                                <div class="coordinate">8</div>
+                                <div class="coordinate">7</div>
+                                <div class="coordinate">6</div>
+                                <div class="coordinate">5</div>
+                                <div class="coordinate">4</div>
+                                <div class="coordinate">3</div>
+                                <div class="coordinate">2</div>
+                                <div class="coordinate">1</div>
+                            </div>
+                            <div id="board" class="chessboard" role="grid" aria-label="Chess board"></div>
+                            <div class="file-labels">
+                                <div class="coordinate">a</div>
+                                <div class="coordinate">b</div>
+                                <div class="coordinate">c</div>
+                                <div class="coordinate">d</div>
+                                <div class="coordinate">e</div>
+                                <div class="coordinate">f</div>
+                                <div class="coordinate">g</div>
+                                <div class="coordinate">h</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status Bar -->
+                    <div class="status-bar">
+                        <div id="status" class="status" role="status" aria-live="polite">White's Turn</div>
+                        <div class="game-info">
+                            <div class="timer" id="moveCounter">Move: 0</div>
+                            <div class="timer" id="timer">⏱ 00:00</div>
+                        </div>
+                    </div>
+
+                    <!-- Captured by Black -->
+                    <div class="captured-pieces">
+                        <div class="captured-header">
+                            <span>⚪ Captured by White</span>
+                            <span id="materialWhite" class="material-advantage"></span>
+                        </div>
+                        <div id="capturedByWhite" class="captured-list"></div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <!-- Move History -->
+                    <div class="sidebar-section">
+                        <div class="sidebar-title">
+                            <span>📜 Move History</span>
+                            <button onclick="clearMoveHistory()" style="font-size: 11px; padding: 4px 8px; min-height: unset;">Clear</button>
+                        </div>
+                        <div id="moveHistory" class="move-history">
+                            <div style="color: #999; font-size: 12px; text-align: center; padding: 20px;">
+                                No moves yet
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics -->
+                    <div class="sidebar-section">
+                        <div class="sidebar-title">📊 Statistics</div>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value" id="statWins">0</div>
+                                <div class="stat-label">Wins</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="statLosses">0</div>
+                                <div class="stat-label">Losses</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="statDraws">0</div>
+                                <div class="stat-label">Draws</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="statGames">0</div>
+                                <div class="stat-label">Total</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <script src="index.js"></script>
+</body>
+</html>
