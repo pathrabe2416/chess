@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Chess</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@300;400;500&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --light-square: #e8dcc4;
+            --dark-square: #4a4a4a;
+            --board-frame: #3d3d3d;
+            --gold-accent: #c9a05d;
+            --gold-light: #d4b380;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            background: var(--dark-square);
+        }
+
+        body {
+            font-family: 'Newsreader', serif;
+            position: relative;
+        }
+
+        /* FIX 2: Checkerboard background on html element, fully fixed */
+        html::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                repeating-conic-gradient(
+                    var(--dark-square) 0% 25%, 
+                    rgba(72, 72, 72, 1) 0% 50%
+                );
+            background-size: 120px 120px;
+            background-position: 0 0;
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        html::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .container {
+            position: relative;
+            min-height: 100dvh;
+            width: 100%;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            opacity: 0;
+            animation: gentleFadeIn 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes gentleFadeIn {
+            to { opacity: 1; }
+        }
+
+        .frame {
+            background: linear-gradient(135deg, 
+                rgba(61, 61, 61, 0.4) 0%, 
+                rgba(42, 42, 42, 0.6) 100%);
+            border: none;
+            outline: 3px solid var(--board-frame);
+            outline-offset: -3px;
+            border-radius: 4px;
+            width: 100%;
+            min-height: 100dvh;
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* Gold corner accents — FIX 6: constrain within safe bounds */
+        .frame::before,
+        .frame::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 2px solid var(--gold-accent);
+        }
+
+        .frame::before {
+            top: 16px;
+            left: 16px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .frame::after {
+            bottom: 16px;
+            right: 16px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .content {
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .icon {
+            font-size: 3.5rem;
+            color: var(--light-square);
+            margin-bottom: 2rem;
+            display: inline-block;
+            opacity: 0.9;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        h1 {
+            font-family: 'Libre Baskerville', serif;
+            font-size: clamp(3rem, 7vw, 5rem);
+            font-weight: 700;
+            color: var(--light-square);
+            letter-spacing: 0.05em;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .subtitle {
+            font-family: 'Newsreader', serif;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            font-weight: 300;
+            color: var(--gold-light);
+            letter-spacing: 0.08em;
+            margin-bottom: 3.5rem;
+            line-height: 1.6;
+            opacity: 0.85;
+        }
+
+        button {
+            font-family: 'Newsreader', serif;
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: var(--dark-square);
+            background: linear-gradient(135deg, 
+                var(--gold-light) 0%, 
+                var(--gold-accent) 100%);
+            border: none;
+            padding: 1.2rem 3.5rem;
+            border-radius: 4px;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.1) 0%, 
+                transparent 100%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        button:hover::before { opacity: 1; }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 24px rgba(0, 0, 0, 0.5),
+                0 2px 8px rgba(201, 160, 93, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, 
+                #dab890 0%, 
+                var(--gold-accent) 100%);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 
+                0 2px 10px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes breathe {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 0.9;
+            }
+            50% { 
+                transform: scale(1.02);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .frame::before,
+            .frame::after {
+                width: 35px;
+                height: 35px;
+            }
+
+            button {
+                padding: 1.1rem 2.8rem;
+                font-size: 1rem;
+            }
+
+            .icon {
+                font-size: 3rem;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .frame::before {
+                top: 10px;
+                left: 10px;
+            }
+
+            .frame::after {
+                bottom: 10px;
+                right: 10px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="frame">
+            <div class="content">
+                <div class="icon">♔</div>
+                <h1>Chess</h1>
+                <p class="subtitle">Take a breath. Make your move.</p>
+                <a href="chess-mode-select.html"><button>Start Game</button></a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
