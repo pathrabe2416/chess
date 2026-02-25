@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Master - Mode Selection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-dark: #4a4a4a;
+            --gold: #d4af76;
+            --gold-hover: #c49a5f;
+            --text-light: #e8e0d5;
+            --border-gold: #b89968;
+        }
+
+        /* ✅ FIX 1: html and body must allow scrolling — never overflow:hidden on body */
+        html {
+            height: 100%;
+            overflow-y: auto; /* allow page-level scroll */
+        }
+        
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            min-height: 100vh;
+            background-color: var(--bg-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            /* ✅ FIX 2: Removed overflow:hidden — was blocking all scrolling */
+            /* overflow: hidden; ← THIS WAS THE BUG */
+        }
+
+        /* ✅ FIX 3: Move decorative corners to a dedicated fixed wrapper
+           so they never participate in document flow or trigger overflow */
+        .corner-decor {
+            pointer-events: none;
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .corner-decor::before,
+        .corner-decor::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border: 3px solid var(--gold);
+        }
+
+        .corner-decor::before {
+            top: 20px;
+            left: 20px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .corner-decor::after {
+            bottom: 20px;
+            right: 20px;
+            border-left: none;
+            border-top: none;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            /* ✅ FIX 4: Ensure container sits above the decorative layer */
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 0.8s ease-in;
+            /* ✅ FIX 5: Vertical padding so content never gets clipped on small screens */
+            padding: 40px 20px;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .crown-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+        
+        .crown-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: var(--text-light);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        
+        h1 {
+            font-size: 72px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            font-weight: 400;
+            letter-spacing: 8px;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: var(--gold);
+            margin-bottom: 60px;
+            letter-spacing: 2px;
+            font-style: italic;
+        }
+        
+        .mode-select {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        button {
+            padding: 20px 50px;
+            border: 2px solid var(--gold);
+            border-radius: 4px;
+            font-size: 18px;
+            font-weight: 400;
+            cursor: pointer;
+            background: var(--gold);
+            color: var(--bg-dark);
+            transition: all 0.3s ease;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden; /* ✅ OK here — scoped to button only, not body */
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: left 0.5s ease;
+        }
+        
+        button:hover::before {
+            left: 100%;
+        }
+        
+        button:hover {
+            background: var(--gold-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 175, 118, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .mode-icon {
+            font-size: 24px;
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+        
+        .btn-main-menu {
+            background: transparent;
+            border: 2px solid var(--border-gold);
+            color: var(--gold);
+            margin-top: 20px;
+        }
+        
+        .btn-main-menu:hover {
+            background: rgba(212, 175, 118, 0.1);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        
+        /* ✅ FIX 6: Responsive — tighter padding so nothing overflows on small screens */
+        @media (max-width: 600px) {
+            .corner-decor::before,
+            .corner-decor::after {
+                width: 50px;
+                height: 50px;
+            }
+
+            .corner-decor::before {
+                top: 10px;
+                left: 10px;
+            }
+
+            .corner-decor::after {
+                bottom: 10px;
+                right: 10px;
+            }
+            
+            h1 {
+                font-size: 48px;
+                letter-spacing: 4px;
+            }
+            
+            .subtitle {
+                font-size: 16px;
+                margin-bottom: 40px;
+            }
+            
+            button {
+                padding: 18px 40px;
+                font-size: 16px;
+            }
+            
+            .crown-icon {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ✅ FIX 3: Dedicated fixed element for corner decorations — fully isolated from layout -->
+    <div class="corner-decor" aria-hidden="true"></div>
+
+    <div class="container">
+        <div class="crown-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2L15 8L21 9L16.5 14L18 20L12 17L6 20L7.5 14L3 9L9 8L12 2Z"/>
+                <line x1="3" y1="20" x2="21" y2="20"/>
+            </svg>
+        </div>
+        
+        <h1>Chess</h1>
+        <p class="subtitle">Choose your battlefield.</p>
+        
+        <div class="mode-select">
+            <button onclick="startGame('player')">
+                <span class="mode-icon">👥</span>
+                Player vs Player
+            </button>
+            <button onclick="startGame('ai')">
+                <span class="mode-icon">🤖</span>
+                Player vs AI
+            </button>
+        </div>
+        
+        <button class="btn-main-menu" onclick="goToMainMenu()">
+            <span class="mode-icon">←</span>
+            Back to Main Menu
+        </button>
+    </div>
+    
+    <script>
+        function startGame(mode) {
+            sessionStorage.setItem('chessMode', mode);
+            window.location.href = 'chess-game(1).html';
+        }
+        
+        function goToMainMenu() {
+            sessionStorage.removeItem('chessMode');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
