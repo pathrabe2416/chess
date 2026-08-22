@@ -5,6 +5,13 @@ It delivers a clean, professional UI with classic chess fundamentals, smart inte
 
 Designed for both casual players and serious learners, the game supports Player vs Player and Player vs Computer modes with adjustable difficulty.
 
+
+## 🚀 Live Demo
+
+👉 Play here:
+https://pathrabe2416.github.io/chess/
+
+
 ## 🧠 Features
 
 Two game modes:
@@ -62,10 +69,6 @@ Pawn promotion supported
 Turn-based gameplay with validation
 No gimmicks. Just proper chess.
 
-## 🚀 Live Demo
-
-👉 Play here:
-https://pathrabe2416.github.io/chess/
 
 ## 🤝 Contribution
 
